@@ -1,0 +1,18 @@
+app:
+  build: ./app
+  volumes:
+    - "/api"
+    - "/www"
+  ports:
+    - "3000:3000"
+  env_file: .env
+
+nginx:
+  build: ./nginx
+  volumes:
+    - "/www" 
+  links:
+    - app:app
+  ports:
+    - "80:80"
+
