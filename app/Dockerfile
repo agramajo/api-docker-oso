@@ -1,9 +1,9 @@
 FROM node:6.6.0
 EXPOSE 3000
-ADD api /api
 ADD www /www
+ADD api /api
 WORKDIR /api
 
 RUN npm install
-CMD ["node","server.js"]
+CMD ["npm","start"]
 

@@ -20,7 +20,7 @@ En app/www esta el contenido estatico para la web spa.
  
 - Clonamos el repo `git clone git@github.com:agramajo/api-oso`
 - Creamos una maquina `docker-machine create -d virtualbox dev`
-- Ponemos las variables `eval $(docker-machine env)`
+- Ponemos las variables `eval $(docker-machine env dev)`
 - Crear la imagen `docker-compose build`
 - Arrancamos los servicios `docker-compose up -d`
 

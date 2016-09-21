@@ -9,10 +9,10 @@ app:
 
 nginx:
   build: ./nginx
-  volumes:
-    - "/www" 
+  volumes_from:
+    - app
   links:
-    - app:app
+    - app
   ports:
     - "80:80"
 
