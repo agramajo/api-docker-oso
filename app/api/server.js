@@ -22,7 +22,6 @@ router.get('/', function(req, res) {
 
 // authenticate
 router.post('/auth', function(req, res) {
-	const results = [];
 	const username = req.body.username;
 	const password = req.body.password;
 
@@ -30,12 +29,11 @@ router.post('/auth', function(req, res) {
 		if(err) { done(); console.log(err); return res.status(500).json({success: false, data: err}); }
 		const query = client.query('SELECT * FROM users WHERE username=($1) AND password=($2)',[username, password]);
 
-		query.on('row', (row) => { results.push(row); });
 		query.on('end', function(result) { 
 			done(); 
 			if (result.rowCount) {
 				var token = jwt.sign(username, app.get('secret'), { expiresIn: 86400 });
-				return res.status(200).json({success: true, data: results, token: token}); 
+				return res.status(200).json({success: true, data: 'Authentication ok', token: token});
 			}
 			return res.status(200).json({success: false, data: 'Authentication failed'}); 
 		});
