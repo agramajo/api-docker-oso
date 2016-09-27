@@ -12,6 +12,10 @@
 ## Test auth
 
 ```shell
-$ curl --data 'username=admin&password=test123' api-oso.herokuapp.com/api/auth
-{"success":true,"data":[{"id":1,"username":"admin","password":"test123","role":1}],"token":"eyJhbGciOiJIUzI1NiJ9.YWRtaW4.P9C3VBCIS8BMNQwXjJVdJCmbo_mZvCwTZtffBtFw2IM"}
+$ curl -s --data 'username=admin&password=test123' api-oso.herokuapp.com/api/auth | python -mjson.tool
+{
+    "data": "Authentication ok",
+    "success": true,
+    "token": "eyJhbGciOiJIUzI1NiJ9.YWRtaW4.P9C3VBCIS8BMNQwXjJVdJCmbo_mZvCwTZtffBtFw2IM"
+}
 ```
