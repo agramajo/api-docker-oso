@@ -33,12 +33,11 @@ router.post('/auth', function(req, res) {
 			done(); 
 			if (result.rowCount) {
 				var token = jwt.sign(username, app.get('secret'), { expiresIn: 86400 });
-				return res.status(200).json({success: true, data: 'Authentication ok', token: token});
+				return res.json({success: true, data: 'Authentication ok', token: token});
 			}
-			return res.status(200).json({success: false, data: 'Authentication failed'}); 
+			return res.json({success: false, data: 'Authentication failed'}); 
 		});
 	});
-
 });
 
 // middleware to check token
@@ -67,9 +66,10 @@ router.get('/users', function(req, res) {
   
 	pg.connect(database, (err, client, done) => {
 		if(err) { done(); console.log(err); return res.status(500).json({success: false, data: err}); }
+
 		const query = client.query('SELECT * FROM users ORDER BY id ASC');
 		query.on('row', (row) => { results.push(row); });
-		query.on('end', () => { done(); return res.status(200).json({success: true, data: results}); });
+		query.on('end', () => { done(); return res.json({success: true, data: results}); });
 	});
 });
 
@@ -79,10 +79,10 @@ router.get('/users/:user_id', function(req, res) {
   
 	pg.connect(database, (err, client, done) => {
 		if(err) { done(); console.log(err); return res.status(500).json({success: false, data: err}); }
-		const query = client.query('SELECT * FROM users WHERE id = ($1)', [id]);
-		query.on('end', () => { done(); return res.status(200).json({success: true, data: results}); });
-	});
 
+		const query = client.query('SELECT * FROM users WHERE id = ($1)', [id]);
+		query.on('end', () => { done(); return res.json({success: true, data: results}); });
+	});
 });
 
 // add user
@@ -94,6 +94,7 @@ router.post('/users', function(req, res) {
 
 	pg.connect(database, (err, client, done) => {
 		if(err) { done(); console.log(err); return res.status(500).json({success: false, data: err}); }
+
 		const query = client.query('INSERT INTO users(username, password,role) values($1, $2, $3)',[username, password, role]);
 		query.on('end', () => { done(); return res.status(200).json({success: true, data: results}); });
 	});
@@ -109,8 +110,9 @@ router.put('/users/:user_id', function(req, res) {
 
 	pg.connect(database, (err, client, done) => {
 		if(err) { done(); console.log(err); return res.status(500).json({success: false, data: err}); }
+
 		const query = client.query('UPDATE users SET username=($1), password=($2),role=($3)) WHERE id=($4)',[username, password, role, id]);
-		query.on('end', () => { done(); return res.status(200).json({success: true, data: results}); });
+		query.on('end', () => { done(); return res.json({success: true, data: results}); });
 	});
 });
 
@@ -121,8 +123,9 @@ router.delete('/users/:user_id', function(req, res) {
 	
 	pg.connect(database, (err, client, done) => {
 		if(err) { done(); console.log(err); return res.status(500).json({success: false, data: err}); }
+
 		const query = client.query('DELETE FROM users WHERE id=($1)',[id]);
-		query.on('end', () => { done(); return res.status(200).json({success: true, data: results}); });
+		query.on('end', () => { done(); return res.json({success: true, data: results}); });
 	});
 });
 
