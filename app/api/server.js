@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 
-app.set('secret','tiThighEem1')
+app.set('secret','tiThighEem1');
 
 var router = express.Router();
 
@@ -30,13 +30,11 @@ router.post('/auth', function(req, res) {
 		if(err) { done(); console.log(err); return res.status(500).json({success: false, data: err}); }
 		const query = client.query('SELECT * FROM users WHERE username=($1) AND password=($2)',[username, password]);
 
-		
-
 		query.on('row', (row) => { results.push(row); });
 		query.on('end', function(result) { 
 			done(); 
 			if (result.rowCount) {
-				var token = jwt.sign(user, app.get('secret'), { expires: 86400 });
+				var token = jwt.sign(username, app.get('secret'), { expiresIn: 86400 });
 				return res.status(200).json({success: true, data: results, token: token}); 
 			}
 			return res.status(200).json({success: false, data: 'Authentication failed'}); 
