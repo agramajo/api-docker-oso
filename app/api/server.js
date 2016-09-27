@@ -12,16 +12,58 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 
+app.set('secret','tiThighEem1')
+
 var router = express.Router();
 
 router.get('/', function(req, res) {
-    res.json({ message: 'Welcome the the real world!' });   
+    res.json({ data: 'Welcome the the real world!' });   
 });
 
 // authenticate
 router.post('/auth', function(req, res) {
+	const results = [];
+	const username = req.body.username;
+	const password = req.body.password;
+
+	pg.connect(database, (err, client, done) => {
+		if(err) { done(); console.log(err); return res.status(500).json({success: false, data: err}); }
+		const query = client.query('SELECT * FROM users WHERE username=($1) AND password=($2)',[username, password]);
+
+		
+
+		query.on('row', (row) => { results.push(row); });
+		query.on('end', function(result) { 
+			done(); 
+			if (result.rowCount) {
+				var token = jwt.sign(user, app.get('secret'), { expires: 86400 });
+				return res.status(200).json({success: true, data: results, token: token}); 
+			}
+			return res.status(200).json({success: false, data: 'Authentication failed'}); 
+		});
+	});
 
 });
+
+// middleware to check token
+router.use(function(req, res, next) {
+	// check header, url or post
+	var token = req.body.token || req.param('token') || req.headers['x-access-token'];
+
+	if (token) {
+		jwt.verify(token, app.get('secret'), function(err, decoded) {
+			if (err) {
+				return res.json({ success: false, message: 'Failed to authenticate token.' });
+			} else {
+				req.decoded = decoded;
+				next();
+			}
+		});
+	} else {
+		res.status(403).json({success: false, data: 'No token'})
+	}
+});
+
 
 // list user
 router.get('/users', function(req, res) {
