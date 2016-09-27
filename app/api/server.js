@@ -11,6 +11,7 @@ var database = process.env.DATABASE_URL || 'postgres://localhost:5432/api-oso';
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
+app.use(express.static('public'));
 
 app.set('secret','tiThighEem1');
 
