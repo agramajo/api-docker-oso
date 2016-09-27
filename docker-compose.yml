@@ -1,3 +1,13 @@
+mongo:
+  image: mongo:2.6.12
+  ports:
+    - "27017:27017"
+
+#redis:
+#  image: redis
+#  ports:
+#    - "6379:6379"
+
 app:
   build: ./app
   volumes:
@@ -6,13 +16,16 @@ app:
   ports:
     - "3000:3000"
   env_file: .env
+  links:
+    - mongo
+#    - redis
 
 nginx:
   build: ./nginx
   volumes_from:
     - app
-  links:
-    - app
   ports:
     - "80:80"
+  links:
+    - app
 
