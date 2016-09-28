@@ -41,11 +41,15 @@ app.controller('Home', function($scope, $http) {
 
 });
 
-app.controller('Login', function($http, $window) {
+app.controller('Login', function($location, $http, $window) {
     var vm = this;
-
     vm.login = login;
-    logout();
+
+    // ejecutamos logout por las dudas    
+    (function logout() {
+        delete $window.sessionStorage.token;
+        $http.defaults.headers['x-access-token'] = '';
+    })();
 
     function login() {
         $http
@@ -53,16 +57,12 @@ app.controller('Login', function($http, $window) {
             .success(function (data, status, headers, config) {
                 $window.sessionStorage.token = data.token;
                 vm.error = 'Welcome';
+                $location.path('/');
             })
             .error(function (data, status, headers, config) {
                 delete $window.sessionStorage.token;
                 vm.error = 'Error: Invalid user or password';
         });
-    };
-
-    function logout() {
-        delete $window.sessionStorage.token;
-        $http.defaults.headers['x-access-token'] = '';
     };
 });
 
