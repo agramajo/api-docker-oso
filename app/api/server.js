@@ -36,7 +36,7 @@ router.post('/auth', function(req, res) {
 				var token = jwt.sign(username, app.get('secret'), { expiresIn: 86400 });
 				return res.json({success: true, data: 'Authentication ok', token: token});
 			}
-			return res.json({success: false, data: 'Authentication failed'}); 
+			return res.status(401).json({success: false, data: 'Authentication failed'}); 
 		});
 	});
 });
