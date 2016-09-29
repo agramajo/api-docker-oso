@@ -37,8 +37,8 @@ app.run(function($rootScope, $http, $location, $window) {
     });
 });
 
-app.controller('Home', function($scope, $http) {
-
+app.controller('Home', function() {
+    var vm = this;
 });
 
 app.controller('Login', function($location, $http, $window) {
