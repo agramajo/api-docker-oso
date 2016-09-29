@@ -37,8 +37,9 @@ app.run(function($rootScope, $http, $location, $window) {
     });
 });
 
-app.controller('Home', function() {
+app.controller('Home', function($window) {
     var vm = this;
+	vm.username = getUserFromJwt($window.sessionStorage.token);
 });
 
 app.controller('Login', function($location, $http, $window) {
@@ -65,6 +66,12 @@ app.controller('Login', function($location, $http, $window) {
         });
     };
 });
+
+function getUserFromJwt(token) {
+	var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace('-', '+').replace('_', '/');
+    return window.atob(base64);
+};
 
 /*
 app.factory('authInterceptor', function ($rootScope, $q, $window) {
